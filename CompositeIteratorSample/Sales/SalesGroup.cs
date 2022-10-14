@@ -2,7 +2,7 @@
 
 namespace CompositeIteratorSample.Sales
 {
-    public class SalesGroup : SalesUnit, IEnumerable<SalesUnit>
+    public class SalesGroup : SalesUnit
     {
         public SalesGroup
             (string name, IList<SalesUnit> units) : base(name)
@@ -10,13 +10,11 @@ namespace CompositeIteratorSample.Sales
             Units = units;
         }
 
-        public IList<SalesUnit> Units { set; private get; }
-
         public override long GetCredits() =>
             Units.Sum(c => c.GetCredits());
 
-        public IEnumerator<SalesUnit> GetEnumerator() =>
-            new SalesUnitEnumerator(Units.ToArray());
+        public override IEnumerator<SalesUnit> GetEnumerator() =>
+            new SalesUnitEnumerator(this);
 
         public override void PayCommission(long amount)
         {
@@ -27,7 +25,5 @@ namespace CompositeIteratorSample.Sales
                 salesUnit.PayCommission(shareAmount);
             }
         }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

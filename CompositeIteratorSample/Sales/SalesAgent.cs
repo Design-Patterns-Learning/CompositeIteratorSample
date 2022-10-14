@@ -16,5 +16,8 @@ namespace CompositeIteratorSample.Sales
         {
             _credits += amount;
         }
+
+        public override IEnumerator<SalesUnit> GetEnumerator() =>
+            new SalesUnitEnumerator(this);
     }
 }

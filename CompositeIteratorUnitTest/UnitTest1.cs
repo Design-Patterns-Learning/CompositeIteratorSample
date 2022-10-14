@@ -16,13 +16,10 @@ namespace CompositeIteratorUnitTest
 
             unit.PayCommission(5000);
 
-            if (unit is SalesGroup)
+            foreach (var member in unit)
             {
-                foreach (var member in (SalesGroup)unit)
-                {
-                    var name = member.Name;
-                    var credits = member.GetCredits();
-                }
+                var name = member.Name;
+                var credits = member.GetCredits();
             }
         }
     }

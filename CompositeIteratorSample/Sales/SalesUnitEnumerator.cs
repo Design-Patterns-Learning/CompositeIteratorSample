@@ -4,13 +4,12 @@ namespace CompositeIteratorSample.Sales
 {
     public class SalesUnitEnumerator : IEnumerator<SalesUnit>
     {
-        private readonly SalesUnit[] _salesUnits;
-        private int _index;
+        private Queue<SalesUnit> _salesUnits = new Queue<SalesUnit>();
         private SalesUnit _current;
 
-        public SalesUnitEnumerator(params SalesUnit[] salesUnits)
+        public SalesUnitEnumerator(SalesUnit unit)
         {
-            _salesUnits = salesUnits;
+            _salesUnits.Enqueue(unit);
         }
 
         public SalesUnit Current => _current;
@@ -20,15 +19,17 @@ namespace CompositeIteratorSample.Sales
         public void Dispose()
         {
             _current = default;
-            _index = 0;
         }
 
         public bool MoveNext()
         {
-            if (_index < _salesUnits.Length)
+            if (_salesUnits.Any())
             {
-                _current = _salesUnits[_index];
-                _index++;
+                _current = _salesUnits.Dequeue();
+                foreach (var item in _current.Units)
+                {
+                    _salesUnits.Enqueue(item);
+                }
 
                 return true;
             }
@@ -39,7 +40,6 @@ namespace CompositeIteratorSample.Sales
         public void Reset()
         {
             _current = default;
-            _index = 0;
         }
     }
 }
